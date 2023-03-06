@@ -24,6 +24,7 @@ public class mainTemp {
         }
         System.out.print("method number (1-3):");
         m = sc.nextInt();
+        sc.close();
         switch (m) {
             case 1: // 1. algoritms
                 break;
