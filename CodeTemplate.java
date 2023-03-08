@@ -1,6 +1,6 @@
 import java.util.Scanner;
 
-public class mainTemp {
+public class CodeTemplate {
     public static void main(String[] args) {
         int[][] l;
         int[][] path = { { 0, 0 }, { 0, 1 }, { 0, 2 }, { 1, 2 } }; // šeit ir jābūt rezultātam

@@ -1,20 +1,25 @@
-//package dip107;
 import java.util.Scanner;
-//import dip107.*;
+
+import Tools.*;
 
 public class Maze {
+    public static void printPath(int[][] path){
+        System.out.println("results:");
+        for (int[] line : path )
+            System.out.print("(" + line[0] + "," + line[1] + ") ");
+    }
     public static void main(String[] arg){
         int[][] maze;
-        //int[][] path = { { 0, 0 }, { 0, 1 }, { 0, 2 }, { 1, 2 } }; // šeit ir jābūt rezultātam
+        int[][] path;
         int row, col, mode;
         char fil;
         Scanner sc = new Scanner(System.in);
-        System.out.print("row count: ");
+        System.out.print("Row count: ");
         row = sc.nextInt();
-        System.out.print("column count: ");
+        System.out.print("Column count: ");
         col = sc.nextInt();
         sc.nextLine();
-        System.out.print("Auto fill maze (y/n)?");
+        System.out.print("Auto fill maze (y/n)? ");
         fil = sc.nextLine().charAt(0);
         int i;
         if (fil == 'n') {
@@ -27,7 +32,6 @@ public class Maze {
             }
         } else {
             // automātiski aizpildam masīvu un izvadam to ekrānā
-            //maze = new int[row][col];
             int[] dims={row,col};
             maze = GenMaze.deapthFisrt(dims);
             for(int[] line : maze){
@@ -37,31 +41,21 @@ public class Maze {
                 System.out.println();
             }
         }
-        
-        System.out.println("1 - Keep to the left side.");
-        System.out.println("2 - Flood fill.");
-        System.out.print("method number (1-2):");
+        System.out.println("Choose a method:");
+        System.out.println("  1 - Keep to the left side.");
+        System.out.println("  2 - Flood fill.");
+        System.out.print("Method number (1-2): ");
         mode = sc.nextInt();
         sc.close();
-
-        int[][] path;
         
         switch (mode) {
-            case 1: // 1. algoritms
+            case 1: // left side algorythm
                 path = FirstRoute.leftSide(maze);
-
-                // rezultātu izvade
-                System.out.println("results:");
-                for (int[] line : path )
-                    System.out.print("(" + line[0] + "," + line[1] + ") ");
+                printPath(path);
                 break;
-            case 2: // 2. algoritms
+            case 2: // flood fill algorythm
                 path = SecondRoute.floodFill(maze);
-
-                // rezultātu izvade
-                System.out.println("results:");
-                for (int[] line : path )
-                    System.out.print("(" + line[0] + "," + line[1] + ") ");
+                printPath(path);
                 break;
             default:
                 System.out.println("Input Error: Method does not exist.");
@@ -69,9 +63,3 @@ public class Maze {
         
     }
 }
-// Todo:
-// update trello board
-// move everything to the package (I just couldnt get them to work fsm)
-// mb linked lisk for path
-// sc not closed? (VScode points out a problem that sc is not closed, even tho i closed it)
-// make path output a function mb

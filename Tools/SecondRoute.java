@@ -1,7 +1,8 @@
+package Tools;
 //package dip107;
 
-public class FirstRoute {
-    public static int[][] leftSide(int[][] maze){
+public class SecondRoute {
+    public static int[][] floodFill(int[][] maze) {
         // figure out the length of path (x)
         // initialize path
         //int[][] path = new int[x][2];
@@ -10,7 +11,5 @@ public class FirstRoute {
         int[][] path = new int[2][2];
 
         return path;
-
-
     }
 }
