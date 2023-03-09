@@ -1,147 +1,213 @@
-package Linass;
-
+import java.io.File;
+import java.io.FileWriter;
+import java.io.IOException;
+import java.io.PrintWriter;
 import java.util.Random;
 
-public class linass {
-    private class isTurn {
-        
-        public static boolean Up(int[][] arr, int y, int x) {
-            int xMax = (arr[0].length - 1);
-            if ((y - 1 < 0) || (x - 2 < 0) || (x + 2 > xMax))
+public class Linass {
+    private static class isTurn {
+        private int[][] mazeArray;
+        private int y;
+        private int x;
+        private int xMax;
+        private int yMax;
+
+        public isTurn(int[][] arr, int y, int x) {
+            this.mazeArray = arr;
+            this.y = y;
+            this.x = x;
+            this.yMax = (arr.length - 1);
+            this.xMax = (arr[0].length - 1);
+        }
+
+        public boolean Up() {
+            if (y - 1 < 0 || (y == yMax && x - 1 == xMax) || x + 2 > xMax || x - 2 < 0)
                 return false;
             try {
-                if ((arr[y - 1][x - 1] == 1) || (arr[y - 1][x + 1] == 1) || (arr[y - 2][x] == 1)) {
+                if (mazeArray[y - 1][x - 1] == 1)
                     return false;
-                }
+
+                if (mazeArray[y - 1][x + 1] == 1)
+                    return false;
+
+                if (mazeArray[y - 2][x] == 1)
+                    return false;
+
+                if ((mazeArray[y - 1][x - 2] == 1) && (mazeArray[y - 1][x + 2] == 1))
+                    return false;
+
             } catch (Exception e) {
-                return false;
+                return true;
             }
             return true;
         }
 
-        public static boolean Down(int[][] arr, int y, int x) {
-            int yMax = (arr.length - 1);
+        public boolean Down() {
             if (y + 1 > yMax)
                 return false;
-            if (arr[y + 1][x] == 1)
-                return false;
-            if (x - 1 >= 0) {
-                if (arr[y + 1][x - 1] == 1)
+            try {
+                if (mazeArray[y + 1][x - 1] == 1)
                     return false;
-            }
-            if (y + 2 <= yMax) {
-                if (arr[y + 2][x] == 1)
+
+                if (mazeArray[y + 1][x + 1] == 1)
                     return false;
+
+                if ((mazeArray[y + 1][x - 2] == 1) && (mazeArray[y + 1][x + 2] == 1))
+                    return false;
+
+                if (mazeArray[y + 2][x] == 1)
+                    return false;
+
+                if (mazeArray[y][x - 3] == 1)
+                    return false;
+
+            } catch (Exception e) {
+                return true;
             }
             return true;
         }
 
-        public static boolean Left(int[][] arr, int y, int x) {
-            int yMax = (arr.length - 1);
-            if (x - 1 < 0)
+        public boolean Left() {
+            if (x - 1 < 0 || ((x == xMax) && (y + 1 == yMax)) || y + 2 > yMax || y - 2 < 0)
                 return false;
-            if (arr[y][x - 1] == 1)
-                return false;
-            if (x - 2 >= 0) {
-                if (arr[y][x - 2] == 1)
+
+            try {
+                if (mazeArray[y - 1][x - 1] == 1)
                     return false;
-            }
-            if (y - 1 >= 0 && x - 1 >= 0) {
-                if (arr[y - 1][x - 1] == 1)
+
+                if (mazeArray[y + 1][x - 1] == 1)
                     return false;
+
+                if (mazeArray[y][x - 2] == 1)
+                    return false;
+
+                if (mazeArray[y - 3][x] == 1)
+                    return false;
+
+            } catch (Exception e) {
+                return true;
             }
-            if (y + 2 > yMax)
-                return false;
             return true;
         }
 
-        public static boolean Right(int[][] arr, int y, int x) {
-            int xMax = (arr[0].length - 1);
+        public boolean Right() {
             if (x + 1 > xMax)
                 return false;
-            if (arr[y][x + 1] == 1)
-                return false;
-            if (y - 1 >= 0) {
-                if (arr[y - 1][x + 1] == 1)
+
+            try {
+                if (mazeArray[y - 1][x + 1] == 1)
                     return false;
-            }
-            if (x + 2 <= xMax) {
-                if (arr[y][x + 2] == 1)
+
+                if (mazeArray[y + 1][x + 1] == 1)
                     return false;
+
+                if (mazeArray[y][x + 2] == 1)
+                    return false;
+
+                if (mazeArray[y][x + 3] == 1)
+                    return false;
+
+                if (mazeArray[y - 3][x] == 1)
+                    return false;
+            } catch (Exception e) {
+                return true;
             }
             return true;
         }
     }
+    
+    public static void main(String[] arg) throws IOException { // delete after debug "throws IOException"
+        int rows = 20;
+        int columns = 20;
+        int n = 0;
+        while (n < 100) {
+            int[][] maze = new int[rows][columns];
+            maze[0][0] = 1;
+            maze[9][9] = 2;
+            maze = elderway(maze, 0, 0);
 
-    public static void main(String[] arg) {
-        int rows = 10;
-        int columns = 10;
-        int[][] maze = new int[rows][columns];
-        maze[0][0] = 1;
-        maze[9][9] = 2;
-        maze = elderway(maze, 0, 0);
-        for (int[] line : maze) {
-            for (int el : line) {
-                if (el == 1)
-                    System.out.print(" " + "*");
-                else
-                    System.out.print(" " + el);
+            if (maze[0][0] == 20) {
+                File log = new File("log.txt");
+                String name = "log_" + n + "_failed.txt";
+                File rename = new File(name);
+                log.renameTo(rename);
+            } else {
+                File log = new File("log.txt");
+                String name = "log_" + n + "_succes.txt";
+                File rename = new File(name);
+                log.renameTo(rename);
             }
-            System.out.println();
+            n++;
         }
     }
 
-    public static int[][] elderway(int[][] a, int b, int c) {
-        int[][] arr = a;
-        int yMax = (arr.length - 1);
-        int xMax = (arr[0].length - 1);
-        int y = b;
-        int x = c;
+    public static int[][] elderway(int[][] Array, int yPoint, int xPoint) throws IOException { // delete after debug
+                                                                                               // "throws IOException"
+        int yMax = (Array.length - 1);
+        int xMax = (Array[0].length - 1);
+        PrintWriter log = new PrintWriter(new FileWriter("log.txt"));
+        int n = 0;
         while (true) {
-            System.out.println(y + "|" + x);
+            isTurn verifyTurn = new isTurn(Array, yPoint, xPoint);
+            System.out.println(yPoint + "|" + xPoint);
+            log.println("\tRun " + n + " at [" + yPoint + "][" + xPoint + "]");
+            log.println();
             switch (Direction.fork()) {
                 case up:
-                    if (!isTurn.Up(arr, y, x))
+                    if (!verifyTurn.Up())
                         break;
-                    y--;
-                    arr[y][x] = 1;
+                    yPoint--;
+                    Array[yPoint][xPoint] = 1;
                     break;
 
                 case down:
-                    if (!isTurn.Down(arr, y, x))
+                    if (!verifyTurn.Down())
                         break;
-                    y++;
-                    arr[y][x] = 1;
+                    yPoint++;
+                    Array[yPoint][xPoint] = 1;
                     break;
 
                 case left:
-                    if (!isTurn.Left(arr, y, x))
+                    if (!verifyTurn.Left())
                         break;
-                    x--;
-                    arr[y][x] = 1;
+                    xPoint--;
+                    Array[yPoint][xPoint] = 1;
                     break;
 
                 case right:
-                    if (!isTurn.Right(arr, y, x))
+                    if (!verifyTurn.Right())
                         break;
-                    x++;
-                    arr[y][x] = 1;
+                    xPoint++;
+                    Array[yPoint][xPoint] = 1;
                     break;
             }
-            if (arr[yMax][xMax] == 1) {
-                return arr;
+            if (Array[yMax][xMax] == 1) {
+                log.close();
+                return Array;
             }
-            for (int[] line : arr) {
+            if (n > 500) {
+                log.println("Failure");
+                Array[0][0] = 20;
+                log.close();
+                return Array;
+            }
+
+            for (int[] line : Array) {
                 for (int el : line) {
-                    if (el == 1)
+                    if (el == 1) {
                         System.out.print(" " + "*");
-                    else
+                        log.print(" " + "'");
+                    } else {
                         System.out.print(" " + el);
+                        log.print(" " + "H");
+                    }
                 }
                 System.out.println();
+                log.println();
             }
+            log.println();
+            n++;
         }
-
     }
 
     private static enum Direction {
