@@ -1,10 +1,10 @@
-import java.io.File;
 import java.io.FileWriter;
 import java.io.IOException;
 import java.io.PrintWriter;
+import java.util.ArrayList;
 import java.util.Random;
 
-public class Linass {
+public class linass {
     private static class isTurn {
         private int[][] mazeArray;
         private int y;
@@ -26,16 +26,12 @@ public class Linass {
             try {
                 if (mazeArray[y - 1][x - 1] == 1)
                     return false;
-
                 if (mazeArray[y - 1][x + 1] == 1)
                     return false;
-
                 if (mazeArray[y - 2][x] == 1)
                     return false;
-
                 if ((mazeArray[y - 1][x - 2] == 1) && (mazeArray[y - 1][x + 2] == 1))
                     return false;
-
             } catch (Exception e) {
                 return true;
             }
@@ -48,19 +44,12 @@ public class Linass {
             try {
                 if (mazeArray[y + 1][x - 1] == 1)
                     return false;
-
                 if (mazeArray[y + 1][x + 1] == 1)
                     return false;
-
-                if ((mazeArray[y + 1][x - 2] == 1) && (mazeArray[y + 1][x + 2] == 1))
-                    return false;
-
                 if (mazeArray[y + 2][x] == 1)
                     return false;
-
-                if (mazeArray[y][x - 3] == 1)
+                if (mazeArray[y][x - 3] == 1 && mazeArray[y + 1][x - 3] == 1)
                     return false;
-
             } catch (Exception e) {
                 return true;
             }
@@ -68,22 +57,21 @@ public class Linass {
         }
 
         public boolean Left() {
-            if (x - 1 < 0 || ((x == xMax) && (y + 1 == yMax)) || y + 2 > yMax || y - 2 < 0)
-                return false;
-
+            if (x - 1 < 0 || ((x == xMax) || (y + 1 == yMax)) || y + 2 > yMax || y - 2 < 0)
+                return true;
             try {
                 if (mazeArray[y - 1][x - 1] == 1)
                     return false;
-
                 if (mazeArray[y + 1][x - 1] == 1)
                     return false;
-
                 if (mazeArray[y][x - 2] == 1)
                     return false;
-
                 if (mazeArray[y - 3][x] == 1)
                     return false;
-
+                if ((mazeArray[y][x - 3] == 1 && mazeArray[y - 1][x - 3] == 1)
+                        || (mazeArray[y][x - 3] == 1 && mazeArray[y - 2][x - 3] == 1)) {
+                    return false;
+                }
             } catch (Exception e) {
                 return true;
             }
@@ -93,20 +81,15 @@ public class Linass {
         public boolean Right() {
             if (x + 1 > xMax)
                 return false;
-
             try {
                 if (mazeArray[y - 1][x + 1] == 1)
                     return false;
-
                 if (mazeArray[y + 1][x + 1] == 1)
                     return false;
-
                 if (mazeArray[y][x + 2] == 1)
                     return false;
-
                 if (mazeArray[y][x + 3] == 1)
                     return false;
-
                 if (mazeArray[y - 3][x] == 1)
                     return false;
             } catch (Exception e) {
@@ -115,103 +98,105 @@ public class Linass {
             return true;
         }
     }
-    
+
+    public static ArrayList<Integer> elderY = new ArrayList<>();
+    public static ArrayList<Integer> elderX = new ArrayList<>();
+
+    private static class Branch{
+        private int[][] mazeCore;
+
+        public Branch (int[][] a){
+        this.mazeCore = a;
+        }
+        private static int[] getBranchPos() {
+            Random rnd = new Random();
+            int pos = rnd.nextInt(elderX.size());
+            int[] coord = new int[2];
+            coord[0] = elderY.get(pos);
+            coord[1] = elderX.get(pos);
+            return coord;
+        }
+
+
+    }
+
     public static void main(String[] arg) throws IOException { // delete after debug "throws IOException"
-        int rows = 20;
-        int columns = 20;
-        int n = 0;
-        while (n < 100) {
-            int[][] maze = new int[rows][columns];
+        System.out.println(java.time.Clock.systemUTC().instant());
+        PrintWriter result = new PrintWriter(new FileWriter("log.txt"));
+        int[][] maze;
+        int rows = 10;
+        int columns = 10;
+        while (true) {
+            maze = new int[rows][columns];
             maze[0][0] = 1;
             maze[9][9] = 2;
             maze = elderway(maze, 0, 0);
-
             if (maze[0][0] == 20) {
-                File log = new File("log.txt");
-                String name = "log_" + n + "_failed.txt";
-                File rename = new File(name);
-                log.renameTo(rename);
-            } else {
-                File log = new File("log.txt");
-                String name = "log_" + n + "_succes.txt";
-                File rename = new File(name);
-                log.renameTo(rename);
-            }
-            n++;
+                maze = new int[rows][columns];
+                maze = elderway(maze, 0, 0);
+            } else
+                break;
         }
+
+        for (int[] line : maze) {
+            for (int i : line) {
+                if (i == 1)
+                    result.print(" " + "'");
+                else
+                    result.print(" " + "H");
+            }
+            result.println();
+        }
+        result.close();
+        System.out.println(java.time.Clock.systemUTC().instant());
     }
 
-    public static int[][] elderway(int[][] Array, int yPoint, int xPoint) throws IOException { // delete after debug
-                                                                                               // "throws IOException"
+    private static int[][] elderway(int[][] Array, int yPoint, int xPoint) {
         int yMax = (Array.length - 1);
         int xMax = (Array[0].length - 1);
-        PrintWriter log = new PrintWriter(new FileWriter("log.txt"));
         int n = 0;
         while (true) {
             isTurn verifyTurn = new isTurn(Array, yPoint, xPoint);
-            System.out.println(yPoint + "|" + xPoint);
-            log.println("\tRun " + n + " at [" + yPoint + "][" + xPoint + "]");
-            log.println();
+            if (Array[yMax][xMax] == 1) {
+                return Array;
+            }
             switch (Direction.fork()) {
                 case up:
                     if (!verifyTurn.Up())
                         break;
                     yPoint--;
-                    Array[yPoint][xPoint] = 1;
                     break;
 
                 case down:
                     if (!verifyTurn.Down())
                         break;
                     yPoint++;
-                    Array[yPoint][xPoint] = 1;
                     break;
 
                 case left:
                     if (!verifyTurn.Left())
                         break;
-                    xPoint--;
-                    Array[yPoint][xPoint] = 1;
                     break;
 
                 case right:
                     if (!verifyTurn.Right())
                         break;
                     xPoint++;
-                    Array[yPoint][xPoint] = 1;
                     break;
             }
-            if (Array[yMax][xMax] == 1) {
-                log.close();
-                return Array;
-            }
-            if (n > 500) {
-                log.println("Failure");
+            Array[yPoint][xPoint] = 1;
+            elderY.add(yPoint);
+            elderX.add(xPoint);
+            if (n > 30 * xMax) {
                 Array[0][0] = 20;
-                log.close();
                 return Array;
             }
-
-            for (int[] line : Array) {
-                for (int el : line) {
-                    if (el == 1) {
-                        System.out.print(" " + "*");
-                        log.print(" " + "'");
-                    } else {
-                        System.out.print(" " + el);
-                        log.print(" " + "H");
-                    }
-                }
-                System.out.println();
-                log.println();
-            }
-            log.println();
             n++;
         }
     }
 
     private static enum Direction {
-        up, down, left, right;
+        up, left, right, down;
 
         private static final Random rnd = new Random();
 
