@@ -6,6 +6,7 @@ import java.util.LinkedList;
 public class SecondRoute {
 
     public static int[][] floodFill(int[][] mazeOrig,int row,int col) {
+        final long startTime = System.nanoTime();
         // figure out the length of path (x)
         // initialize path
         //int[][] path = new int[x][2];
@@ -137,6 +138,11 @@ public class SecondRoute {
             path[i][0]=rowList.get(i);
             path[i][1]=colList.get(i);
         }
+        final long endTime = System.nanoTime();
+        //Double time = (double)(endTime - startTime)/1000000;  
+        double time = (endTime - startTime) / 1_000_000.0;
+        time = Math.ceil(time * 10_000) / 10_000;
+        System.out.println("Total execution time: " + time+"ms.");
         return path;
     }
 }
