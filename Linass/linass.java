@@ -111,9 +111,7 @@ public class linass {
         private static int[] getBranchPos() {
             Random rnd = new Random();
             int pos = rnd.nextInt(elderX.size());
-            int[] coord = new int[2];
-            coord[0] = elderY.get(pos);
-            coord[1] = elderX.get(pos);
+            int[] coord = {elderY.get(pos), elderX.get(pos)};
             return coord;
         }
 
@@ -130,10 +128,10 @@ public class linass {
             maze = new int[rows][columns];
             maze[0][0] = 1;
             maze[9][9] = 2;
-            maze = elderway(maze, 0, 0);
+            maze = createCore(maze, 0, 0);
             if (maze[0][0] == 20) {
                 maze = new int[rows][columns];
-                maze = elderway(maze, 0, 0);
+                maze = createCore(maze, 0, 0);
             } else
                 break;
         }
@@ -151,7 +149,7 @@ public class linass {
         System.out.println(java.time.Clock.systemUTC().instant());
     }
 
-    private static int[][] elderway(int[][] Array, int yPoint, int xPoint) {
+    private static int[][] createCore(int[][] Array, int yPoint, int xPoint) {
         int yMax = (Array.length - 1);
         int xMax = (Array[0].length - 1);
         int n = 0;
