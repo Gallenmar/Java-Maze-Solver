@@ -3,13 +3,15 @@ package Tools;
 
 public class GenMaze {
     public static int[][] deapthFisrt(int[] dims){
-        int[][] maze = new int[dims[0]][dims[1]];
-
-        for(int i=0; i<dims[0]; i++){
-            for(int j=0; j<dims[1]; j++){
-                maze[i][j] =  (int) Math.round( Math.random() )  ;;
-            }
-        }
+        //int[][] maze = new int[dims[0]][dims[1]];
+        int[][] maze = {{0,1,1,1,1,1,1},
+                        {0,0,0,0,0,0,0},
+                        {1,1,1,0,1,1,1},
+                        {1,0,0,0,0,0,1},
+                        {0,0,1,1,1,0,1},
+                        {1,0,0,0,0,0,0},
+                        {1,1,1,1,1,1,0},
+                    };
 
         return maze;
     }
