@@ -3,14 +3,27 @@ package Tools;
 
 public class GenMaze {
     public static int[][] deapthFisrt(int[] dims){
-        int[][] maze = new int[dims[0]][dims[1]];
+        final long startTime = System.nanoTime();
 
-        for(int i=0; i<dims[0]; i++){
-            for(int j=0; j<dims[1]; j++){
-                maze[i][j] =  (int) Math.round( Math.random() )  ;;
-            }
-        }
 
+        //int[][] maze = new int[dims[0]][dims[1]];
+        int[][] maze = {{0,1,1,1,1,1,1},
+                        {0,0,0,0,0,0,0},
+                        {1,1,1,0,1,1,1},
+                        {1,0,0,0,0,0,1},
+                        {0,0,1,1,1,0,1},
+                        {1,0,0,0,0,0,0},
+                        {1,1,1,1,1,1,0},
+                    };
+        
+        
+        
+        
+        
+        final long endTime = System.nanoTime();
+        double time = (endTime - startTime) / 1_000_000.0;
+        time = Math.ceil(time * 10_000) / 10_000;
+        System.out.println("Total execution time: " + time+"ms.");
         return maze;
     }
 }
