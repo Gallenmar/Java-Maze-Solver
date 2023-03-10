@@ -4,6 +4,7 @@ import java.io.PrintWriter;
 import java.util.ArrayList;
 import java.util.Random;
 
+
 public class linass {
     private static class isTurn {
         private int[][] mazeArray;
@@ -58,7 +59,7 @@ public class linass {
 
         public boolean Left() {
             if (x - 1 < 0 || ((x == xMax) || (y + 1 == yMax)) || y + 2 > yMax || y - 2 < 0)
-                return true;
+                return false;
             try {
                 if (mazeArray[y - 1][x - 1] == 1)
                     return false;
@@ -102,19 +103,31 @@ public class linass {
     public static ArrayList<Integer> elderY = new ArrayList<>();
     public static ArrayList<Integer> elderX = new ArrayList<>();
 
-    private static class Branch{
+    private static class Branch {
         private int[][] mazeCore;
 
-        public Branch (int[][] a){
-        this.mazeCore = a;
+        public Branch(int[][] a) {
+            this.mazeCore = a;
         }
+
+        public int calculateBranching() {
+            int freeSpace = 0;
+            for (int i = 0; i < mazeCore.length; i++) {
+                for (int j = 0; j < mazeCore[i].length; j++) {
+                    if (mazeCore[i][j] == 0)
+                        freeSpace++;
+                }
+            }
+            double branchCount = (mazeCore.length * mazeCore[0].length * 0.25); //may be change 
+            return (int)branchCount;
+        }
+
         private static int[] getBranchPos() {
             Random rnd = new Random();
             int pos = rnd.nextInt(elderX.size());
-            int[] coord = {elderY.get(pos), elderX.get(pos)};
+            int[] coord = { elderY.get(pos), elderX.get(pos) };
             return coord;
         }
-
 
     }
 
@@ -122,12 +135,11 @@ public class linass {
         System.out.println(java.time.Clock.systemUTC().instant());
         PrintWriter result = new PrintWriter(new FileWriter("log.txt"));
         int[][] maze;
-        int rows = 10;
-        int columns = 10;
+        int rows = 5;
+        int columns = 5;
         while (true) {
             maze = new int[rows][columns];
             maze[0][0] = 1;
-            maze[9][9] = 2;
             maze = createCore(maze, 0, 0);
             if (maze[0][0] == 20) {
                 maze = new int[rows][columns];
@@ -135,6 +147,10 @@ public class linass {
             } else
                 break;
         }
+
+        Branch continueCore = new Branch(maze);
+
+        System.out.println(continueCore.calculateBranching());
 
         for (int[] line : maze) {
             for (int i : line) {
@@ -174,6 +190,7 @@ public class linass {
                 case left:
                     if (!verifyTurn.Left())
                         break;
+                    xPoint--;
                     break;
 
                 case right:
@@ -185,7 +202,7 @@ public class linass {
             Array[yPoint][xPoint] = 1;
             elderY.add(yPoint);
             elderX.add(xPoint);
-            if (n > 30 * xMax) {
+            if (n > Math.pow(1.5 * (xMax + yMax) / 2, 2)) {
                 Array[0][0] = 20;
                 return Array;
             }
