@@ -1,11 +1,14 @@
 import java.io.FileWriter;
 import java.io.IOException;
 import java.io.PrintWriter;
+import java.nio.channels.Pipe;
 import java.util.ArrayList;
 import java.util.Random;
 
+import javax.swing.text.html.HTMLDocument.BlockElement;
 
 public class linass {
+
     private static class isTurn {
         private int[][] mazeArray;
         private int y;
@@ -100,17 +103,74 @@ public class linass {
         }
     }
 
-    public static ArrayList<Integer> elderY = new ArrayList<>();
-    public static ArrayList<Integer> elderX = new ArrayList<>();
-
     private static class Branch {
+        public static ArrayList<Integer> coreY = new ArrayList<>();
+        public static ArrayList<Integer> coreX = new ArrayList<>();
+
         private int[][] mazeCore;
 
         public Branch(int[][] a) {
             this.mazeCore = a;
+
         }
 
-        public int calculateBranching() {
+        public int[][] expandCore() {
+            int n = calculateBranching();
+            int[][] editedMaze = mazeCore;
+            while (n != 0) {
+                System.out.println(n);
+                int[] position = getBranchPos();
+                int y = position[0];
+                int x = position[1];
+                boolean left = true;
+                boolean right = true;
+                boolean up = true;
+                boolean down = true;
+                isTurn verifyTurn = new isTurn(editedMaze, x, y);
+                while (up && down && left && right) {
+                    switch (Direction.fork()) {
+                        case up:
+                            if (!verifyTurn.Up()) {
+                                up = false;
+                                break;
+                            }
+                            y--;
+
+                            break;
+
+                        case down:
+                            if (!verifyTurn.Down()) {
+                                down = false;
+                                break;
+                            }
+                            y++;
+                            break;
+
+                        case left:
+                            if (!verifyTurn.Left()) {
+                                left = false;
+                                break;
+                            }
+
+                            x--;
+                            break;
+
+                        case right:
+                            if (!verifyTurn.Right()) {
+                                right = false;
+                                break;
+                            }
+                            x++;
+                            break;
+                    }
+                    editedMaze[y][x] = 1;
+                }
+                n--;
+            }
+            return editedMaze;
+        }
+
+        private int calculateBranching() {
             int freeSpace = 0;
             for (int i = 0; i < mazeCore.length; i++) {
                 for (int j = 0; j < mazeCore[i].length; j++) {
@@ -118,14 +178,14 @@ public class linass {
                         freeSpace++;
                 }
             }
-            double branchCount = (mazeCore.length * mazeCore[0].length * 0.25); //may be change 
-            return (int)branchCount;
+            double branchCount = (mazeCore.length * mazeCore[0].length * 0.25); // may be change
+            return (int) branchCount;
         }
 
         private static int[] getBranchPos() {
             Random rnd = new Random();
-            int pos = rnd.nextInt(elderX.size());
-            int[] coord = { elderY.get(pos), elderX.get(pos) };
+            int pos = rnd.nextInt(coreX.size());
+            int[] coord = { coreY.get(pos), coreX.get(pos) };
             return coord;
         }
 
@@ -135,8 +195,8 @@ public class linass {
         System.out.println(java.time.Clock.systemUTC().instant());
         PrintWriter result = new PrintWriter(new FileWriter("log.txt"));
         int[][] maze;
-        int rows = 5;
-        int columns = 5;
+        int rows = 50;
+        int columns = 50;
         while (true) {
             maze = new int[rows][columns];
             maze[0][0] = 1;
@@ -148,9 +208,9 @@ public class linass {
                 break;
         }
 
-        Branch continueCore = new Branch(maze);
+        //Branch branch = new Branch(maze);
 
-        System.out.println(continueCore.calculateBranching());
+        //maze = branch.expandCore();
 
         for (int[] line : maze) {
             for (int i : line) {
@@ -200,8 +260,8 @@ public class linass {
                     break;
             }
             Array[yPoint][xPoint] = 1;
-            elderY.add(yPoint);
-            elderX.add(xPoint);
+            Branch.coreY.add(yPoint);
+            Branch.coreX.add(xPoint);
             if (n > Math.pow(1.5 * (xMax + yMax) / 2, 2)) {
                 Array[0][0] = 20;
                 return Array;
