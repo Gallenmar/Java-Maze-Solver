@@ -12,13 +12,13 @@ public class Maze {
 
         System.out.println();
         for (int i = 0; i <= maze.length + 1; i++) {
-            System.out.print("█");
+            System.out.print("███");
         }
         System.out.println();
         boolean contains = false;
         int k;
         for (int i = 0; i < maze.length; i++) {
-            System.out.print("█");
+            System.out.print("███");
             for (int j = 0; j < maze[0].length; j++) {
                 contains = false;
                 // System.out.printf("%d\t",el);
@@ -31,19 +31,19 @@ public class Maze {
                         }
                     }
                     if (contains) {
-                        System.out.print("@");
+                        System.out.print(" " + '\u2022' + " ");
                     } else {
-                        System.out.print(" ");
+                        System.out.print("   ");
                     }
                 } else if (maze[i][j] == 1) {
-                    System.out.print("█");
+                    System.out.print("███");
                 }
             }
-            System.out.print("█");
+            System.out.print("███");
             System.out.println();
         }
         for (int i = 0; i <= maze.length + 1; i++) {
-            System.out.print("█");
+            System.out.print("███");
         }
         System.out.println();
     }
@@ -75,24 +75,24 @@ public class Maze {
             int[] dims = { row, col };
             maze = GenMaze.deapthFisrt(dims);
             for (i = 0; i <= maze.length + 1; i++) {
-                System.out.print("█");
+                System.out.print("███");
             }
             System.out.println();
             for (int[] line : maze) {
-                System.out.print("█");
+                System.out.print("███");
                 for (int el : line) {
                     // System.out.printf("%d\t",el);
                     if (el == 0) {
-                        System.out.print(" ");
+                        System.out.print("   ");
                     } else if (el == 1) {
-                        System.out.print("█");
+                        System.out.print("███");
                     }
                 }
-                System.out.print("█");
+                System.out.print("███");
                 System.out.println();
             }
             for (i = 0; i <= maze.length + 1; i++) {
-                System.out.print("█");
+                System.out.print("███");
             }
             System.out.println();
         }

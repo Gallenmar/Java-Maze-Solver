@@ -1,4 +1,5 @@
 package Tools;
+
 //package dip107;
 import java.util.Random;
 
@@ -93,12 +94,12 @@ public class GenMaze {
 
         maze = expandCore(maze);
 
-        for(int[] line : maze){
-            for(int i : line) {
-                if (i == 1) {
-                    i = 0;
+        for(int i = 0; i < maze.length; i++){
+            for(int j = 0; j < maze[i].length; j ++) {
+                if(maze[i][j] == 1){
+                    maze[i][j] = 0;
                 } else {
-                    i = 1;
+                    maze[i][j] = 1;
                 }
             }
         }
