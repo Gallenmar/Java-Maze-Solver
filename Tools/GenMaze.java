@@ -78,7 +78,7 @@ public class GenMaze {
         }
     }
 
-    public static int[][] deapthFisrt(int[] dims) {
+    public static int[][] deapthFirst(int[] dims) {
         final long startTime = System.nanoTime();
         int[][] maze;
         while (true) {
