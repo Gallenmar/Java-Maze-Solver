@@ -46,6 +46,10 @@ public class SecondGenMaze {
         boolean e = true;
         boolean n = true;
         int count = 0;
+        Random rand = new Random();
+        int num = rand.nextInt(2);
+        // num =1;                     //uncomment this code to get real deapth first (its gonna have less path variations) 
+        int threshhold = 2 +num;
         if (exists(maze,r,c)){
             s = goodNeighbor(maze, r+1, c);
             w = goodNeighbor(maze, r, c-1);
@@ -57,7 +61,7 @@ public class SecondGenMaze {
             if (e) count++;
             if (n) count++;
 
-            if (count>=3){
+            if (count>=threshhold){
                 return true;
             } else {
                 return false;
@@ -206,9 +210,20 @@ public class SecondGenMaze {
         }
         
         dfs(maze, 0,dims[1]-1);
+
+
         maze[0][0]=0;
         maze[dims[0]-1][dims[1]-1] = 0;
-        
+        /*
+        Random rand = new Random();
+        int numx, numy;
+        for (int i =0;i<(dims[0]*dims[1]/100); i++){
+            numx = rand.nextInt(dims[0]);
+            numy = rand.nextInt(dims[1]);
+            maze[numx][numy]=0;
+        }
+         */
+
         final long endTime = System.nanoTime();
         double time = (endTime - startTime) / 1_000_000.0;
         time = Math.ceil(time * 10_000) / 10_000;
