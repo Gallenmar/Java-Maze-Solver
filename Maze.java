@@ -90,6 +90,22 @@ public class Maze {
         }
         return number;
     }
+
+    public static char keyInputYN(Scanner sc){
+        boolean validInput = false;
+        char fil = 'y';
+
+        while (!validInput) {
+            fil = sc.nextLine().charAt(0);
+            if ((fil=='y') || (fil=='n')){
+                validInput = true;
+            } else {
+                System.out.println("Input y or n charecter.");
+                sc.nextLine(); // consume the invalid input
+            }
+        }
+        return fil;
+    }
     public static void main(String[] arg){
         int[][] maze;
         int[][] path;
@@ -104,7 +120,8 @@ public class Maze {
         col = keyInputInt(sc);
         sc.nextLine();
         System.out.print("Auto fill maze (y/n)? ");
-        fil = sc.nextLine().charAt(0);
+        // fil = sc.nextLine().charAt(0);
+        fil = keyInputYN(sc);
         int i;
         char rep;
         int tmp;
@@ -161,11 +178,11 @@ public class Maze {
         
         switch (mode) {
             case 1: // left side algorythm
-                path = FirstRoute.leftSide(maze);
+                path = FirstRoute.rightSide(maze);
                 printPath(path,maze);
                 sc.nextLine();
                 System.out.print("Compare it to the other method to solve maze (y/n)? ");
-                rep = sc.nextLine().charAt(0);
+                rep = keyInputYN(sc);
                 if (rep == 'y') {
                     path = SecondRoute.floodFill(maze,row,col);
                     printPath(path,maze);
@@ -176,9 +193,9 @@ public class Maze {
                 printPath(path,maze);
                 sc.nextLine();
                 System.out.print("Compare it to the other method to solve maze (y/n)? ");
-                rep = sc.nextLine().charAt(0);
+                rep = keyInputYN(sc);
                 if (rep == 'y') {
-                    path = FirstRoute.leftSide(maze);
+                    path = FirstRoute.rightSide(maze);
                     printPath(path,maze);
                 }
                 break;
