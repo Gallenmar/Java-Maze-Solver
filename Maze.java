@@ -453,6 +453,7 @@ class SecondGenMaze {
         }
         
         dfs(maze, 0,dims[1]-1);
+        
 
 
         maze[0][0]=0;
@@ -812,8 +813,8 @@ public class Maze {
         int row, col, mode;
         char fil;
         Scanner sc = new Scanner(System.in);
+        System.out.println("Hello from MazeOverFlow team!");
         System.out.println("Input maze dimentions:");
-        System.out.println("(It's gonna look better if collumn count is bigger then row count)");
         System.out.print("Row count: ");
         // row = sc.nextInt();
         row = keyInputInt(sc);
@@ -860,7 +861,15 @@ public class Maze {
                      */
                     break;
                 case 2: // Nikita's Algorithm
-                    maze = SecondGenMaze.deapthFirst(dims);
+                    try{
+                        maze = SecondGenMaze.deapthFirst(dims);
+                    }
+                    catch(StackOverflowError e){
+                        System.err.println();
+                        System.err.println("MazeOverFlow! (Maze dimentions are too big)");
+                        return;
+                    }
+                    
                     break;
                 default:
                     System.out.println("Input Error: Method does not exist.");
