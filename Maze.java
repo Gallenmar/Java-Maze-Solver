@@ -839,8 +839,8 @@ public class Maze {
         } else {
             System.out.println();
             System.out.println("Choose a method to generate a maze:");
-            System.out.println("  1 - First method.");
-            System.out.println("  2 - Second method.");
+            System.out.println("  1 - First method. (Random noise generation)");
+            System.out.println("  2 - Second method. (Deapth first generation)");
             System.out.print("Method number (1-2): ");
             mode = keyInputInt(sc);
             int[] dims={row,col};
